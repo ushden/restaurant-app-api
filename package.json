@@ -4,7 +4,8 @@
 	"description": "REST API for restaurant app",
 	"main": "index.ts",
 	"scripts": {
-		"serv": "nodemon index.ts"
+		"serv": "nodemon index.ts",
+		"start": "node index.ts"
 	},
 	"keywords": [],
 	"author": "Den Ush<ushden48@gmail.com>",
