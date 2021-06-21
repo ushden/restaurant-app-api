@@ -6,9 +6,9 @@
 	"scripts": {
 		"start": "node dist/index.js",
 		"watch-node": "nodemon dist/index.js",
+    "postinstall": "tsc",
 		"watch-ts": "tsc -w",
-		"deploy": "git add . && git commit -m Heroku && git push",
-		"postinstall": "tsc && mv -i -v static dist/ && rm -v -rf static"
+		"deploy": "git add . && git commit -m Heroku && git push"
 	},
 	"keywords": [],
 	"author": "Den Ush<ushden48@gmail.com>",
