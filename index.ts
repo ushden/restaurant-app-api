@@ -26,6 +26,8 @@ app.use(
 );
 app.use(fileUpload());
 
+app.get('/', (req, res) => res.status(200).send('Добро пожаловать'))
+
 app.use('/api/dishes', dishesRouter);
 app.use('/api/user', userRouter);
 
