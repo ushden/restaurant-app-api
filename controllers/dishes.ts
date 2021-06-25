@@ -11,6 +11,22 @@ export const getAllDishes = async (req: Request, res: Response) => {
 	}
 };
 
+export const getDish = async (req: Request, res: Response) => {
+	try {
+		const { dishId } = req.params;
+
+		const dish = await Dishes.findById({ _id: dishId });
+
+		if (dish) {
+			return res.status(200).json({ dish });
+		}
+
+		return res.status(401).json({ message: 'Блюдо не найдено' });
+	} catch (error) {
+		res.status(400).json({ message: 'Не удалось загрузить блюдо' });
+	}
+};
+
 export const addDishes = async (req: Request, res: Response) => {
 	const { dishes } = req.body;
 	const { image, name, weight, price, ingredients, type } = dishes;

@@ -24,7 +24,7 @@ router.post(
 	registration
 );
 router.post('/adminLogin', adminLogin);
-router.get('/refresh', authMiddleware, refreshToken);
+router.get('/refresh', refreshToken);
 router.get('/logout', authMiddleware, logout);
 router.get('/getUsers', roleMiddleware(['ADMIN']), getUsers);
 

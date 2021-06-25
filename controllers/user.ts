@@ -72,7 +72,6 @@ export const registration = async (req: Request, res: Response) => {
 export const adminLogin = async (req: Request, res: Response) => {
 	try {
 		const { name, password } = req.body;
-		console.log(name, password);
 		const user = await User.findOne({ name });
 
 		if (!user) {
