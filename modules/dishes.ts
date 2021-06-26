@@ -7,7 +7,7 @@ const dishesSchema = new Schema({
 	weight: Number,
 	price: Number,
 	ingredients: String,
-	type: String,
+	type: { type: String, require: true, ref: 'DishesType' },
 	rate: {
 		type: Number,
 		default: 5,

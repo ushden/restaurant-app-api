@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import Dishes from '../modules/dishes';
+import DishesType from '../modules/dishesType';
 
 export const getAllDishes = async (req: Request, res: Response) => {
 	try {
@@ -38,5 +39,37 @@ export const addDishes = async (req: Request, res: Response) => {
 		res.status(201).json(newDishes);
 	} catch (error) {
 		res.status(409).json({ message: error.message });
+	}
+};
+
+export const addDishesType = async (req: Request, res: Response) => {
+	const { value } = req.body;
+
+	try {
+		const isExist = await DishesType.findOne({ value });
+
+		if (isExist) {
+			return res.status(400).json({ message: 'Такая категория существует' });
+		}
+
+		const newType = new DishesType({ value });
+
+		await newType.save();
+
+		res
+			.status(200)
+			.json({ message: 'Категория успешно создана', type: newType });
+	} catch (error) {
+		res.status(400).json({ message: 'Не удалось создать тип блюда' });
+	}
+};
+
+export const getDishesTypes = async (req: Request, res: Response) => {
+	try {
+		const category = await DishesType.find();
+
+		res.status(200).json(category);
+	} catch (error) {
+		res.status(400).json({ message: 'Не удалось загрузить категории' });
 	}
 };
