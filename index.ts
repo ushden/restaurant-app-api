@@ -25,8 +25,9 @@ app.use(
 	})
 );
 app.use(fileUpload());
+app.use(express.static('static'));
 
-app.get('/', (req, res) => res.status(200).send('Добро пожаловать'))
+app.get('/', (req, res) => res.status(200).send('Добро пожаловать'));
 
 app.use('/api/dishes', dishesRouter);
 app.use('/api/user', userRouter);

@@ -1,4 +1,8 @@
+import { Dish } from '../types';
 import { Request, Response } from 'express';
+import { UploadedFile } from 'express-fileupload';
+import path from 'path';
+
 import Dishes from '../modules/dishes';
 import DishesType from '../modules/dishesType';
 
@@ -28,17 +32,47 @@ export const getDish = async (req: Request, res: Response) => {
 	}
 };
 
-export const addDishes = async (req: Request, res: Response) => {
-	const { dishes } = req.body;
-	const { image, name, weight, price, ingredients, type } = dishes;
+export const addDish = async (req: Request, res: Response) => {
+	const dish = req.body as Dish;
 
-	const newDishes = new Dishes(dishes);
 	try {
-		await newDishes.save();
+		const isExist = await Dishes.findOne({ name: dish.name });
 
-		res.status(201).json(newDishes);
+		if (isExist) {
+			return res.status(400).json({ message: 'Такое блюдо уже существует' });
+		}
+
+		const newDish = await new Dishes(dish);
+
+		await newDish.save();
+
+		res.status(200).json({ message: 'Блюдо успешно создано', dish: newDish });
 	} catch (error) {
-		res.status(409).json({ message: error.message });
+		res.status(500).json({ message: 'Не удалось создать блюдо' });
+	}
+};
+
+export const uploadImage = async (req: Request, res: Response) => {
+	try {
+		const image = req.files?.image as UploadedFile;
+		const imagePath = path.resolve(__dirname, '..', 'static', image.name);
+
+		image.mv(imagePath, (err) => {
+			if (err) {
+				return res.status(500).json({
+					message: 'Не удалось загрузить изображение',
+				});
+			}
+
+			return res.status(200).json({
+				message: 'Изображение загружено успешно',
+				name: image.name,
+			});
+		});
+	} catch (error) {
+		res.status(500).json({
+			message: 'Не удалось загрузить изображение',
+		});
 	}
 };
 
@@ -71,5 +105,17 @@ export const getDishesTypes = async (req: Request, res: Response) => {
 		res.status(200).json(category);
 	} catch (error) {
 		res.status(400).json({ message: 'Не удалось загрузить категории' });
+	}
+};
+
+export const deleteDish = async (req: Request, res: Response) => {
+	try {
+		const { id } = req.body;
+
+		const dish = await Dishes.findByIdAndDelete(id);
+
+		res.status(200).json({ message: 'Блюдо успешно удалено', dish });
+	} catch (error) {
+		res.status(500).json({ message: 'Не удалось удалить блюдо' });
 	}
 };
